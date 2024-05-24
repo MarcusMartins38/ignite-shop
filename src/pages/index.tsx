@@ -1,12 +1,13 @@
-import Image from "next/image";
-import { HomeContainer, Product } from "@/styles/pages/home";
+import Image from 'next/image';
+import { HomeContainer, Product } from '@/styles/pages/home';
 import 'keen-slider/keen-slider.min.css';
 
-import {useKeenSlider} from 'keen-slider/react'
+import { useKeenSlider } from 'keen-slider/react';
 
-import { stripe } from "@/lib/stripe";
-import { GetStaticProps } from "next";
-import Stripe from "stripe";
+import { stripe } from '@/lib/stripe';
+import { GetStaticProps } from 'next';
+import Stripe from 'stripe';
+import Link from 'next/link';
 
 interface HomeProps {
   products: {
@@ -14,7 +15,7 @@ interface HomeProps {
     name: string;
     imageUrl: string;
     price: number;
-  }[]
+  }[];
 }
 
 export default function Home({ products }: HomeProps) {
@@ -22,21 +23,22 @@ export default function Home({ products }: HomeProps) {
     slides: {
       perView: 3,
       spacing: 48,
-    }
-  })
+    },
+  });
 
   return (
     <HomeContainer ref={sliderRef}>
-      {products.map(product => (
-      <Product key={product.id} className="keen-slider__slide">
-        <Image src={product.imageUrl} width={400} height={500} alt='first' />
+      {products.map((product) => (
+        <Link href={`/products/${product.id}`} key={product.id}>
+          <Product className="keen-slider__slide">
+            <Image src={product.imageUrl} width={400} height={500} alt="first" />
 
-        <footer>
-          <strong>{product.name}</strong>
-          <span>{product.price}</span>
-
-        </footer>
-      </Product>
+            <footer>
+              <strong>{product.name}</strong>
+              <span>{product.price}</span>
+            </footer>
+          </Product>
+        </Link>
       ))}
     </HomeContainer>
   );
@@ -44,10 +46,10 @@ export default function Home({ products }: HomeProps) {
 
 export const getStaticProps: GetStaticProps = async () => {
   const response = await stripe.products.list({
-    expand: ['data.default_price']
+    expand: ['data.default_price'],
   });
 
-  const products = response.data.map(product => {
+  const products = response.data.map((product) => {
     const price = product.default_price as Stripe.Price;
 
     return {
@@ -58,13 +60,13 @@ export const getStaticProps: GetStaticProps = async () => {
         style: 'currency',
         currency: 'USD',
       }).format(price.unit_amount / 100),
-    }
-  })
+    };
+  });
 
   return {
     props: {
       products,
     },
-    revalidate: 60 * 60 * 2 // 2 hours
-  }
-}
+    revalidate: 60 * 60 * 2, // 2 hours
+  };
+};
