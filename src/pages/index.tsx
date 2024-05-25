@@ -27,20 +27,22 @@ export default function Home({ products }: HomeProps) {
     });
 
     return (
-        <HomeContainer ref={sliderRef}>
-            {products.map((product) => (
-                <Link href={`/products/${product.id}`} key={product.id} prefetch={false}>
-                    <Product className="keen-slider__slide">
-                        <Image src={product.imageUrl} width={400} height={500} alt="first" />
+        <div className="keen-slider">
+            <HomeContainer ref={sliderRef} className="keen-slider__wrap">
+                {products.map((product) => (
+                    <Link href={`/product/${product.id}`} key={product.id} prefetch={false}>
+                        <Product className="keen-slider__slide">
+                            <Image src={product.imageUrl} width={400} height={500} alt="first" />
 
-                        <footer>
-                            <strong>{product.name}</strong>
-                            <span>{product.price}</span>
-                        </footer>
-                    </Product>
-                </Link>
-            ))}
-        </HomeContainer>
+                            <footer>
+                                <strong>{product.name}</strong>
+                                <span>{product.price}</span>
+                            </footer>
+                        </Product>
+                    </Link>
+                ))}
+            </HomeContainer>
+        </div>
     );
 }
 
