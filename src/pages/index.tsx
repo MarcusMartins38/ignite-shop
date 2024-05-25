@@ -8,6 +8,7 @@ import { stripe } from '@/lib/stripe';
 import { GetStaticProps } from 'next';
 import Stripe from 'stripe';
 import Link from 'next/link';
+import Head from 'next/head';
 
 interface HomeProps {
     products: {
@@ -27,8 +28,12 @@ export default function Home({ products }: HomeProps) {
     });
 
     return (
-        <div className="keen-slider">
-            <HomeContainer ref={sliderRef} className="keen-slider__wrap">
+        <>
+            <Head>
+                <title>Home | Ignite Shop</title>
+            </Head>
+
+            <HomeContainer ref={sliderRef} className="keen-slider">
                 {products.map((product) => (
                     <Link href={`/product/${product.id}`} key={product.id} prefetch={false}>
                         <Product className="keen-slider__slide">
@@ -42,7 +47,7 @@ export default function Home({ products }: HomeProps) {
                     </Link>
                 ))}
             </HomeContainer>
-        </div>
+        </>
     );
 }
 
